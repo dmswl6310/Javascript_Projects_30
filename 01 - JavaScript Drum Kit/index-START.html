@@ -5,15 +5,29 @@
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
   <script>
-  window.addEventListener("keydown", (e) => {
-    const key = document.getElementById(e.key);
-    if (key) key.classList.add("pressed");
-  });
+
+   window.onkeydown=(e)=>{
+    const audios=document.getElementsByTagName('audio');
+    const boxes=document.querySelectorAll('.keys .key');
+
+    for(let i=0;i<boxes.length;i++){
+      let tag=boxes[i];
+     if(tag.getAttribute('data-key')===e.keyCode.toString()) {
+      tag.classList.add("playing");
+      setTimeout(()=>{tag.classList.remove("playing")}, 90);
+    }
+  }
+
+    for(let i=0;i<audios.length;i++){
+      let tag=audios[i];
+      if(tag.getAttribute('data-key')===e.keyCode.toString()) tag.play();
+    }
+
+
+  }
   </script>
 </head>
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
