@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid #1B3C90;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #2E61E2,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+    
+    .hour-hand{
+      transform-origin : right;
+    }
+    .min-hand{
+      transform-origin : right;
+    }
+
+    .second-hand{
+      transform-origin : right;
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      box-shadow:       
+      0 0 0 1.5px #6284dc;
+      top: 50%;
+      /* transform-origin : bottom right;
+      transform:rotate(deg); */
+    }
+
+  </style>
+
+  <script>
+
+const setOpacity = (hex, alpha) => `${hex}${Math.floor(alpha * 255).toString(16).padStart(2, 0)}`;
+    function getTime(){
+      const today=new Date();
+      return [today.getHours(),today.getMinutes(),today.getSeconds()];
+    }
+    
+    function displayTime(){
+    const [h,m,s]=getTime();
+    const hour=document.querySelector('.hour-hand');
+    const min=document.querySelector('.min-hand');
+    const second=document.querySelector('.second-hand');
+    const AfterHalf=hour>=12? true:false;
+
+    const hourDegree=(h%12+m/60+s/3600)*30+90
+    const minDegree=(m+s/60)*6+90
+    const secondDegree=(s*6)+90
+    hour.style.transform=`rotate(${hourDegree.toFixed(2)}deg)`;
+    hour.style.background=setOpacity('#5AF5F3',0.8);
+    min.style.transform=`rotate(${minDegree.toFixed(2)}deg)`;
+    min.style.background=setOpacity('#67B4F0',0.8);
+    second.style.transform=`rotate(${secondDegree.toFixed(2)}deg)`;
+    second.style.background=setOpacity('#F4D7F0',0.8);
+    }
+
+    setInterval(displayTime,1000)
+  </script>
+</body>
+</html>
