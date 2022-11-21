@@ -5,8 +5,41 @@
   <title>HTML5 Canvas</title>
 </head>
 <body>
-<canvas id="draw" width="800" height="800"></canvas>
+<canvas id="draw" width="800" height="800">ㅇ</canvas>
 <script>
+  const canvas=document.querySelector("#draw");
+  const context=canvas.getContext('2d');
+  let isDrawing=false;
+  let count=0;
+
+  function downHandler(){
+    isDrawing=true;
+  }
+  function upHandler(){
+    isDrawing=false;
+  }
+  function moveHandler(e){
+    if(!isDrawing) return;
+    const color=count%358;
+    const flag=isOdd((count/2)/50);
+    const brush=(count/2)%50;
+    
+    context.beginPath();
+    context.arc(e.layerX,e.layerY,brush,Math.PI*2,false);
+    context.fillStyle = `hsl(${Math.floor(color)}, 100%,50%)`;
+    count++;
+   context.fill();
+  }
+  canvas.addEventListener('mousedown',downHandler);
+  canvas.addEventListener('mousemove',moveHandler);
+  canvas.addEventListener('mouseup',upHandler);
+  // context.beginPath();
+  // context.moveTo(2,2);
+  // context.lineTo(200,200);
+  // context.stroke();
+  // context.fill();
+  // context.closePath();
+
 </script>
 
 <style>
