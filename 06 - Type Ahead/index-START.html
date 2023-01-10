@@ -1,73 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      var xmlhttp = new XMLHttpRequest();
+      let allArr;
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-var xmlhttp = new XMLHttpRequest();
-let allArr;
+      function myfunc(resp){
+      var arr=JSON.parse(resp);
+      const cleanArr=arr.map(function(x){
+        return {citystate:`${x.city}, ${x.state}`,population:x.population}});
+      return cleanArr;
+      }
 
-function myfunc(resp){
-var arr=JSON.parse(resp);
-const cleanArr=arr.map(function(x){
-  return {citystate:`${x.city}, ${x.state}`,population:x.population}});
-return cleanArr;
-}
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          allArr=myfunc(xmlhttp.responseText);
+          }
+         };
+      function filteredArr(arr,word){
+        // const fArr=arr.filter(city=>city.citystate.toLowerCase().includes(word.toLowerCase()));
+        const fArr=arr.reduce((prev,cur)=>{
 
-xmlhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    allArr=myfunc(xmlhttp.responseText);
-    }
-   };
-function filteredArr(arr,word){
-  // const fArr=arr.filter(city=>city.citystate.toLowerCase().includes(word.toLowerCase()));
-  const fArr=arr.reduce((prev,cur)=>{
+          if(cur.citystate.toLowerCase().includes(word.toLowerCase())){
+            let text="";
+            while(true){
+              let pos=cur.search(new RegExp(word,"i"));
+              if(pos==-1) break;
+              pos.split
+              prev.push({citystate:cur.citystate.replace(`${word}/ig`,`<span class="hl">${word}</span>`)});
+          }
+          return prev;
+        },[]);
 
-    if(cur.citystate.toLowerCase().includes(word.toLowerCase())){
-      let text="";
-      while(true){
-        let pos=cur.search(new RegExp(word,"i"));
-        if(pos==-1) break;
-        pos.split
-        prev.push({citystate:cur.citystate.replace(`${word}/ig`,`<span class="hl">${word}</span>`)});
-    }
-    return prev;
-  },[]);
+        return fArr;
+      }
 
-  return fArr;
-}
+        xmlhttp.open("GET", endpoint, false);
+        xmlhttp.send();
 
-  xmlhttp.open("GET", endpoint, false);
-  xmlhttp.send();
+        const input=document.querySelector("input");
+        let filtered;
 
-  const input=document.querySelector("input");
-  let filtered;
-
-  input.addEventListener('input',function(event){
-    filtered=filteredArr(allArr,event.target.value);
-    let innerText=filtered.reduce((prev,curr)=>`${prev}<li>${curr.citystate}<span class="population">${((curr.population)*1).toLocaleString('en-US')}</span></li>`,"");
-  document.querySelector('.suggestions').innerHTML=innerText;
-    // console.log("hello")
-  })
-
-
-  //  let innerText=filtered.reduce((prev,curr)=>`${prev}<li>${curr.citystate}<span class="population">${((curr.population)*1).toLocaleString('en-US')}</span></li>`,"");
-  // document.querySelector('.suggestions').innerHTML=innerText;
-//  console.log(allArr);
+        input.addEventListener('input',function(event){
+          filtered=filteredArr(allArr,event.target.value);
+          let innerText=filtered.reduce((prev,curr)=>`${prev}<li>${curr.citystate}<span class="population">${((curr.population)*1).toLocaleString('en-US')}</span></li>`,"");
+        document.querySelector('.suggestions').innerHTML=innerText;
+          // console.log("hello")
+        })
 
 
-</script>
-</body>
+        //  let innerText=filtered.reduce((prev,curr)=>`${prev}<li>${curr.citystate}<span class="population">${((curr.population)*1).toLocaleString('en-US')}</span></li>`,"");
+        // document.querySelector('.suggestions').innerHTML=innerText;
+      //  console.log(allArr);
+    </script>
+  </body>
 </html>
